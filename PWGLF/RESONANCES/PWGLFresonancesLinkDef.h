@@ -39,6 +39,7 @@
 #pragma link C++ class AliRsnCutDaughterKStar2010PP+;
 #pragma link C++ class AliRsnCutDaughterLStar2010+;
 #pragma link C++ class AliRsnCutV0+;
+#pragma link C++ class AliRsnCutCascade+;
 #pragma link C++ class AliRsnCutDaughterSigmaStar2010PP+;
 #pragma link C++ class AliRsnCutSetDaughterParticle+;
 #pragma link C++ class AliRsnCutPhiRAA+;
