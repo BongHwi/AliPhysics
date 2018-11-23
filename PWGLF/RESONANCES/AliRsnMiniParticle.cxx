@@ -167,11 +167,11 @@ void AliRsnMiniParticle::CopyDaughter(AliRsnDaughter *daughter)
           fIndexDaughters[0] = v0->GetPindex();
           fIndexDaughters[1] = v0->GetNindex();
        }
-         if (xi && esdEvent) {
-             fIndexDaughters[0] = xi->GetPindex();
-             fIndexDaughters[1] = xi->GetNindex();
-             fIndexDaughters[2] = xi->GetBindex();
-         }
+       if (xi && esdEvent) {
+          fIndexDaughters[0] = xi->GetPindex();
+          fIndexDaughters[1] = xi->GetNindex();
+          fIndexDaughters[2] = xi->GetBindex();
+       }
        // Number of Daughters from MC and Momentum of the Mother
        if (event->GetRefMC()) {
 	 AliMCParticle *part = (AliMCParticle *)event->GetRefMC()->GetTrack(fMother);

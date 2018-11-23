@@ -165,9 +165,9 @@ Bool_t AliRsnCutCascade::IsSelected(TObject *object)
     if (!TargetOK(object)) return kFALSE;
     
     // check cast
-    AliESDcascade *Xiesd = fDaughter->Ref2ESDcascade();
-    AliAODcascade *Xiaod = fDaughter->Ref2AODcascade();
-    //cout << fDaughter->GetRef()->ClassName() << ' ' << Xiesd << ' ' << Xiaod << endl;
+    AliESDcascade *Xiesd = (AliESDcascade*) fDaughter->Ref2ESDcascade();
+    AliAODcascade *Xiaod = (AliAODcascade*) fDaughter->Ref2AODcascade();
+    AliDebugClass(1, Form("ClassName: %s, %s, %s",fDaughter->GetRef()->ClassName(),Xiesd,Xiaod));
     
     // operate depending on cast:IsSelected: Object is not a V0 (RESONANCES/AliRsnCutCascade.cxx:149)
     
@@ -304,8 +304,8 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
      */
     
     Xi->ChangeMassHypothesis(v0q, fHypothesis);
-    if ((TMath::Abs(Xi->GetEffMass() - fMass)) > fMassTolerance) {
-        AliDebugClass(2, "Cascade is not in the expected inv mass range");
+    if ((TMath::Abs(Xi->GetEffMassXi() - fMass)) > fMassTolerance) {
+        AliDebugClass(2, Form("Cascade is not in the expected inv mass range, input mass: %f, cut mass: %f",TMath::Abs(Xi->GetEffMassXi() - fMass),fMass));
         return kFALSE;
     }
     
@@ -314,7 +314,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         
         if(fHypothesis == kXiMinus)
         {Xi->ChangeMassHypothesis(v0q, kOmegaMinus);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.6725)) < fMassToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMassXi() - 1.6725)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kXiMinus);
                 return kFALSE;
             }
@@ -322,7 +322,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         }
         if(fHypothesis == kXiPlusBar)
         {Xi->ChangeMassHypothesis(v0q, kOmegaMinus);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.6725)) < fMassToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMassXi() - 1.6725)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kXiPlusBar);
                 return kFALSE;
             }
@@ -330,7 +330,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         }
         if(fHypothesis == kOmegaMinus)
         {Xi->ChangeMassHypothesis(v0q, kXiPlusBar);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.3217)) < fMassToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMassXi() - 1.3217)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kOmegaMinus);
                 return kFALSE;
             }
@@ -338,7 +338,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         }
         if(fHypothesis == kOmegaPlusBar)
         {Xi->ChangeMassHypothesis(v0q, kXiPlusBar);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.3217)) < fMassToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMassXi() - 1.3217)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kOmegaPlusBar);
                 return kFALSE;
             }
@@ -425,7 +425,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     Double_t zPrimaryVertex = lAODEvent->GetPrimaryVertex()->GetZ();
     AliDebugClass(2, Form("Primary vertex: %f %f %f", xPrimaryVertex, yPrimaryVertex, zPrimaryVertex));
     
-    // retrieve the Xi daughters
+    // retrieve the V0 daughters
     AliAODTrack *pTrack = (AliAODTrack *) (Xi->GetDaughter(0));
     AliAODTrack *nTrack = (AliAODTrack *) (Xi->GetDaughter(1));
     AliAODTrack *bTrack = (AliAODTrack *) (Xi->GetDecayVertexXi()->GetDaughter(0));
@@ -437,7 +437,6 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     filtermapP = pTrack->GetFilterMap();
     filtermapN = nTrack->GetFilterMap();
     filtermapB = bTrack->GetFilterMap();
-    AliDebugClass(2, Form("Filter map: %d, %d, %d",filtermapP,filtermapN,filtermapB));
     
     // filter like-sign V0
     if ( TMath::Abs( ((pTrack->Charge()) - (nTrack->Charge())) ) < 0.1) {
@@ -524,7 +523,6 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
         AliFatal("NULL PID response");
         return kFALSE;
     }
-    
     Double_t posnsTPC   = TMath::Abs(pid->NumberOfSigmasTPC(pTrack, fPID));
     Double_t posnsTPC2  = TMath::Abs(pid->NumberOfSigmasTPC(pTrack, fPID2));
     Double_t negnsTPC   = TMath::Abs(pid->NumberOfSigmasTPC(nTrack, fPID));
