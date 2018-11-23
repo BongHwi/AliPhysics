@@ -24,21 +24,21 @@ AliRsnCutCascade::AliRsnCutCascade(const char *name, Int_t hypothesis, AliPID::E
 AliRsnCut(name, AliRsnTarget::kDaughter),
 fHypothesis(0),
 fMass(0.0),
-fXiTolerance(0.01),
-fXiToleranceVeto(0.01),
+fMassTolerance(0.01),
+fMassToleranceVeto(0.01),
 fSwitch(0),
 fV0LowRadius(0),
 fV0HighRadius(0),
-fXiLowRadius(0),
-fXiHighRadius(0),
+fCascadeLowRadius(0),
+fCascadeHighRadius(0),
 fV0MinDCAVertex(0.3),
-fXiMinDCAVertex(0.3),
+fCascadeMinDCAVertex(0.3),
 fV0MaxDCAVertex(0.3),
-fXiMaxDCAVertex(0.3),
+fCascadeMaxDCAVertex(0.3),
 fV0MinCosPointAngle(0.95),
-fXiMinCosPointAngle(0.95),
+fCascadeMinCosPointAngle(0.95),
 fV0MaxDaughtersDCA(0.5),
-fXiMaxDaughtersDCA(0.5),
+fCascadeMaxDaughtersDCA(0.5),
 fMinTPCcluster(70),
 fMaxRapidity(0.8),
 fPID(pid),
@@ -46,7 +46,7 @@ fPID2(pid2),
 fPID3(pid3),
 fPIDCutV0Proton(0),
 fPIDCutV0Pion(0),
-fPIDCutBPion(0),
+fPIDCutBachelor(0),
 fESDtrackCuts(0x0),
 fCutQuality(Form("%sDaughtersQuality", name)),
 fAODTestFilterBit(5)
@@ -64,21 +64,21 @@ AliRsnCutCascade::AliRsnCutCascade(const AliRsnCutCascade &copy) :
 AliRsnCut(copy),
 fHypothesis(copy.fHypothesis),
 fMass(copy.fMass),
-fXiTolerance(copy.fXiTolerance),
-fXiToleranceVeto(copy.fXiToleranceVeto),
+fMassTolerance(copy.fMassTolerance),
+fMassToleranceVeto(copy.fMassToleranceVeto),
 fSwitch(copy.fSwitch),
 fV0LowRadius(copy.fV0LowRadius),
 fV0HighRadius(copy.fV0HighRadius),
-fXiLowRadius(copy.fXiLowRadius),
-fXiHighRadius(copy.fXiHighRadius),
+fCascadeLowRadius(copy.fCascadeLowRadius),
+fCascadeHighRadius(copy.fCascadeHighRadius),
 fV0MinDCAVertex(copy.fV0MinDCAVertex),
-fXiMinDCAVertex(copy.fXiMinDCAVertex),
+fCascadeMinDCAVertex(copy.fCascadeMinDCAVertex),
 fV0MaxDCAVertex(copy.fV0MaxDCAVertex),
-fXiMaxDCAVertex(copy.fXiMaxDCAVertex),
+fCascadeMaxDCAVertex(copy.fCascadeMaxDCAVertex),
 fV0MinCosPointAngle(copy.fV0MinCosPointAngle),
-fXiMinCosPointAngle(copy.fXiMinCosPointAngle),
+fCascadeMinCosPointAngle(copy.fCascadeMinCosPointAngle),
 fV0MaxDaughtersDCA(copy.fV0MaxDaughtersDCA),
-fXiMaxDaughtersDCA(copy.fXiMaxDaughtersDCA),
+fCascadeMaxDaughtersDCA(copy.fCascadeMaxDaughtersDCA),
 fMinTPCcluster(copy.fMinTPCcluster),
 fMaxRapidity(copy.fMaxRapidity),
 fPID(copy.fPID),
@@ -86,7 +86,7 @@ fPID2(copy.fPID2),
 fPID3(copy.fPID3),
 fPIDCutV0Proton(copy.fPIDCutV0Proton),
 fPIDCutV0Pion(copy.fPIDCutV0Pion),
-fPIDCutBPion(copy.fPIDCutBPion),
+fPIDCutBachelor(copy.fPIDCutBachelor),
 fESDtrackCuts(copy.fESDtrackCuts),
 fCutQuality(copy.fCutQuality),
 fAODTestFilterBit(copy.fAODTestFilterBit)
@@ -94,8 +94,8 @@ fAODTestFilterBit(copy.fAODTestFilterBit)
     //
     // Copy constructor.
     // Just copy all data member values.:IsSelected: Object is not a V0 (RESONANCES/AliRsnCutCascade.cxx:149)
-    
     //
+    
     fCutQuality.SetPtRange(0.15, 1E+20);
     fCutQuality.SetEtaRange(-0.8, 0.8);
     fCutQuality.SetSPDminNClusters(1);
@@ -115,25 +115,26 @@ AliRsnCutCascade &AliRsnCutCascade::operator=(const AliRsnCutCascade &copy)
     // Assignment operator.
     // Just copy all data member values.
     //
+    
     if (this == &copy)
         return *this;
     fHypothesis = copy.fHypothesis;
     fMass = copy.fMass;
-    fXiTolerance = copy.fXiTolerance;
-    fXiToleranceVeto = copy.fXiToleranceVeto;
+    fMassTolerance = copy.fMassTolerance;
+    fMassToleranceVeto = copy.fMassToleranceVeto;
     fSwitch = copy.fSwitch;
     fV0LowRadius = copy.fV0LowRadius;
     fV0HighRadius  = copy.fV0HighRadius;
-    fXiLowRadius = copy.fXiLowRadius;
-    fXiHighRadius  = copy.fXiHighRadius;
+    fCascadeLowRadius = copy.fCascadeLowRadius;
+    fCascadeHighRadius  = copy.fCascadeHighRadius;
     fV0MinDCAVertex = copy.fV0MinDCAVertex;
-    fXiMinDCAVertex = copy.fXiMinDCAVertex;
+    fCascadeMinDCAVertex = copy.fCascadeMinDCAVertex;
     fV0MaxDCAVertex = copy.fV0MaxDCAVertex;
-    fXiMaxDCAVertex = copy.fXiMaxDCAVertex;
+    fCascadeMaxDCAVertex = copy.fCascadeMaxDCAVertex;
     fV0MinCosPointAngle = copy.fV0MinCosPointAngle;
-    fXiMinCosPointAngle = copy.fXiMinCosPointAngle;
+    fCascadeMinCosPointAngle = copy.fCascadeMinCosPointAngle;
     fV0MaxDaughtersDCA = copy.fV0MaxDaughtersDCA;
-    fXiMaxDaughtersDCA = copy.fXiMaxDaughtersDCA;
+    fCascadeMaxDaughtersDCA = copy.fCascadeMaxDaughtersDCA;
     fMinTPCcluster = copy.fMinTPCcluster;
     fMaxRapidity = copy.fMaxRapidity;
     fCutQuality = copy.fCutQuality;
@@ -142,7 +143,7 @@ AliRsnCutCascade &AliRsnCutCascade::operator=(const AliRsnCutCascade &copy)
     fPID3 = copy.fPID3;
     fPIDCutV0Proton = copy.fPIDCutV0Proton;
     fPIDCutV0Pion = copy.fPIDCutV0Pion;
-    fPIDCutBPion = copy.fPIDCutBPion;
+    fPIDCutBachelor = copy.fPIDCutBachelor;
     fESDtrackCuts = copy.fESDtrackCuts;
     fCutQuality = copy.fCutQuality;
     fAODTestFilterBit = copy.fAODTestFilterBit;
@@ -212,7 +213,6 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
     
     Double_t v0q = 0;
     
-    
     // filter like-sign V0
     if ( TMath::Abs( ((pTrack->GetSign()) - (nTrack->GetSign())) ) < 0.1) {
         AliDebugClass(2, "Failed like-sign V0 check");
@@ -241,7 +241,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         AliDebugClass(2, "Failed check on DCA between V0 daughters");
         return kFALSE;
     }
-    if (TMath::Abs(Xi->GetDcaXiDaughters()) > fXiMaxDaughtersDCA) {
+    if (TMath::Abs(Xi->GetDcaXiDaughters()) > fCascadeMaxDaughtersDCA) {
         AliDebugClass(2, "Failed check on DCA between Cascade daughters");
         return kFALSE;
     }
@@ -249,7 +249,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         AliDebugClass(2, "Failed check on V0 DCA to primary vertes");
         return kFALSE;
     }
-    if (TMath::Abs(Xi->GetDcascade(xPrimaryVertex, yPrimaryVertex, zPrimaryVertex)) > fXiMaxDCAVertex) {
+    if (TMath::Abs(Xi->GetDcascade(xPrimaryVertex, yPrimaryVertex, zPrimaryVertex)) > fCascadeMaxDCAVertex) {
         AliDebugClass(2, "Failed check on Cascade DCA to primary vertes");
         return kFALSE;
     }
@@ -258,7 +258,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         AliDebugClass(2, "Failed check on V0 cosine of pointing angle");
         return kFALSE;
     }
-    if ( (TMath::Abs(Xi->GetCascadeCosineOfPointingAngle(xPrimaryVertex,yPrimaryVertex,zPrimaryVertex)) < fXiMinCosPointAngle) || (TMath::Abs(Xi->GetV0CosineOfPointingAngle()) >= 1 ) ) {
+    if ( (TMath::Abs(Xi->GetCascadeCosineOfPointingAngle(xPrimaryVertex,yPrimaryVertex,zPrimaryVertex)) < fCascadeMinCosPointAngle) || (TMath::Abs(Xi->GetV0CosineOfPointingAngle()) >= 1 ) ) {
         AliDebugClass(2, "Failed check on Cascade cosine of pointing angle");
         return kFALSE;
     }
@@ -279,11 +279,10 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         AliDebugClass(2, "Failed V0 fiducial volume");
         return kFALSE;
     }
-    if ( ( Xiradius < fXiLowRadius ) || ( Xiradius > fXiHighRadius ) ) {
+    if ( ( Xiradius < fCascadeLowRadius ) || ( Xiradius > fCascadeHighRadius ) ) {
         AliDebugClass(2, "Failed Cascade fiducial volume");
         return kFALSE;
     }
-    
     
     // Lifetime cut for negative and positive track
     
@@ -305,17 +304,17 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
      */
     
     Xi->ChangeMassHypothesis(v0q, fHypothesis);
-    if ((TMath::Abs(Xi->GetEffMass() - fMass)) > fXiTolerance) {
+    if ((TMath::Abs(Xi->GetEffMass() - fMass)) > fMassTolerance) {
         AliDebugClass(2, "Cascade is not in the expected inv mass range");
         return kFALSE;
     }
-
+    
     //Set Switch to kTRUE to use Competing Cascade Rejection
     if(fSwitch){
         
         if(fHypothesis == kXiMinus)
         {Xi->ChangeMassHypothesis(v0q, kOmegaMinus);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.6725)) < fXiToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMass() - 1.6725)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kXiMinus);
                 return kFALSE;
             }
@@ -323,7 +322,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         }
         if(fHypothesis == kXiPlusBar)
         {Xi->ChangeMassHypothesis(v0q, kOmegaMinus);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.6725)) < fXiToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMass() - 1.6725)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kXiPlusBar);
                 return kFALSE;
             }
@@ -331,7 +330,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         }
         if(fHypothesis == kOmegaMinus)
         {Xi->ChangeMassHypothesis(v0q, kXiPlusBar);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.3217)) < fXiToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMass() - 1.3217)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kOmegaMinus);
                 return kFALSE;
             }
@@ -339,7 +338,7 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
         }
         if(fHypothesis == kOmegaPlusBar)
         {Xi->ChangeMassHypothesis(v0q, kXiPlusBar);
-            if ((TMath::Abs(Xi->GetEffMass() - 1.3217)) < fXiToleranceVeto) {
+            if ((TMath::Abs(Xi->GetEffMass() - 1.3217)) < fMassToleranceVeto) {
                 Xi->ChangeMassHypothesis(v0q, kOmegaPlusBar);
                 return kFALSE;
             }
@@ -365,10 +364,9 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
     
     Double_t bpinsTPC  = TMath::Abs(pid->NumberOfSigmasTPC(bTrack, fPID3));
     
-    
     Double_t maxTPC = fPIDCutV0Proton;
     Double_t maxTPC2 = fPIDCutV0Pion;
-    Double_t maxTPC3 =  fPIDCutBPion;
+    Double_t maxTPC3 =  fPIDCutBachelor;
     
     // applies the cut differently depending on the PID and the momentum
     
@@ -427,7 +425,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     Double_t zPrimaryVertex = lAODEvent->GetPrimaryVertex()->GetZ();
     AliDebugClass(2, Form("Primary vertex: %f %f %f", xPrimaryVertex, yPrimaryVertex, zPrimaryVertex));
     
-    // retrieve the V0 daughters
+    // retrieve the Xi daughters
     AliAODTrack *pTrack = (AliAODTrack *) (Xi->GetDaughter(0));
     AliAODTrack *nTrack = (AliAODTrack *) (Xi->GetDaughter(1));
     AliAODTrack *bTrack = (AliAODTrack *) (Xi->GetDecayVertexXi()->GetDaughter(0));
@@ -439,6 +437,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     filtermapP = pTrack->GetFilterMap();
     filtermapN = nTrack->GetFilterMap();
     filtermapB = bTrack->GetFilterMap();
+    AliDebugClass(2, Form("Filter map: %d, %d, %d",filtermapP,filtermapN,filtermapB));
     
     // filter like-sign V0
     if ( TMath::Abs( ((pTrack->Charge()) - (nTrack->Charge())) ) < 0.1) {
@@ -448,18 +447,18 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     
     // check compatibility with expected species hypothesis
     Double_t mass = 0.0;
+    
     if((fHypothesis==kXiMinus) || (fHypothesis==kXiPlusBar)) {
         mass = Xi->MassXi();
     }
     else if ((fHypothesis==kOmegaMinus) || (fHypothesis==kOmegaPlusBar)) {
         mass = Xi->MassOmega();
     }
-    if ((TMath::Abs(mass - fMass)) > fXiTolerance) {
+    if ((TMath::Abs(mass - fMass)) > fMassTolerance) {
         AliDebugClass(2, Form("Cascade is not in the expected inv mass range  Mass: %d %f %f", fHypothesis, fMass, mass));
         return kFALSE;
     }
     AliDebugClass(2, Form("Mass: %d %f %f", fHypothesis, fMass, mass));
-    
     
     // topological checks
     if (TMath::Abs(Xi->DcaV0ToPrimVertex()) > fV0MaxDCAVertex || TMath::Abs(Xi->DcaV0ToPrimVertex()) < fV0MinDCAVertex) {
@@ -468,10 +467,10 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     }
     // DCA Xi disabled: meaning less?
     /*
-    if (TMath::Abs(Xi->GetDecayVertexXi()) > fXiMaxDCAVertex) {
-        AliDebugClass(2, Form("Failed check on Cascade DCA to primary vertes dca=%f maxdca=%f",TMath::Abs(Xi->DcaV0ToPrimVertex()),fXiMaxDCAVertex));
-        return kFALSE;
-    }
+     if (TMath::Abs(Xi->GetDecayVertexXi()) > fCascadeMaxDCAVertex) {
+     AliDebugClass(2, Form("Failed check on Cascade DCA to primary vertes dca=%f maxdca=%f",TMath::Abs(Xi->DcaV0ToPrimVertex()),fCascadeMaxDCAVertex));
+     return kFALSE;
+     }
      */
     
     // next cut is effective (should it be in AODV0?)
@@ -486,7 +485,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
         AliDebugClass(2, "Failed check on V0 cosine of pointing angle");
         return kFALSE;
     }
-    if (TMath::Abs( Xicospointangle )  < fXiMinCosPointAngle) {
+    if (TMath::Abs( Xicospointangle )  < fCascadeMinCosPointAngle) {
         AliDebugClass(2, "Failed check on Cacade cosine of pointing angle");
         return kFALSE;
     }
@@ -496,7 +495,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
         AliDebugClass(2, "Failed check on V0 DCA between daughters");
         return kFALSE;
     }
-    if (TMath::Abs(Xi->DcaXiDaughters()) > fXiMaxDaughtersDCA) {
+    if (TMath::Abs(Xi->DcaXiDaughters()) > fCascadeMaxDaughtersDCA) {
         AliDebugClass(2, "Failed check on Cascade DCA between daughters");
         return kFALSE;
     }
@@ -513,7 +512,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
         AliDebugClass(2, "Failed V0 fiducial volume");
         return kFALSE;
     }
-    if ( ( Xiradius < fXiLowRadius ) || ( Xiradius > fXiHighRadius ) ){
+    if ( ( Xiradius < fCascadeLowRadius ) || ( Xiradius > fCascadeHighRadius ) ){
         AliDebugClass(2, "Failed Cascade fiducial volume");
         return kFALSE;
     }
@@ -534,34 +533,34 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     
     Double_t maxTPC = fPIDCutV0Proton;
     Double_t maxTPC2 = fPIDCutV0Pion;
-    Double_t maxTPC3 =  fPIDCutBPion;
+    Double_t maxTPC3 =  fPIDCutBachelor;
     
     // applies the cut differently depending on the PID and the momentum
     
     if(fHypothesis==kXiMinus) {
         if (! ((posnsTPC <= maxTPC) && (negnsTPC2 <= maxTPC2) && (bpinsTPC <= maxTPC3)) ) {
-            AliDebugClass(2, "Failed check on Cascade PID");
+            AliDebugClass(2, Form("Failed check on Cascade PID: ptrackPID: %f, nTrackPID %f, btrackPID %f",posnsTPC,negnsTPC2,bpinsTPC));
             return kFALSE;
         }
     }
     else if(fHypothesis==kXiPlusBar) {
         
         if(! ((negnsTPC <= maxTPC) && (posnsTPC2 <= maxTPC2) && (bpinsTPC <= maxTPC3)) ) {
-            AliDebugClass(2, "Failed check on Cascade PID");
+            AliDebugClass(2, Form("Failed check on Cascade PID: ptrackPID: %f, nTrackPID %f, btrackPID %f",posnsTPC,negnsTPC2,bpinsTPC));
             return kFALSE;
         }
     }
     else if(fHypothesis==kOmegaMinus) {
         
         if (! ((posnsTPC <= maxTPC) && (negnsTPC2 <= maxTPC2) && (bpinsTPC <= maxTPC3)) ) {
-            AliDebugClass(2, "Failed check on Cascade PID");
+            AliDebugClass(2, Form("Failed check on Cascade PID: ptrackPID: %f, nTrackPID %f, btrackPID %f",posnsTPC,negnsTPC2,bpinsTPC));
             return kFALSE;
         }
     }
     else if(fHypothesis==kOmegaPlusBar) {
         
         if(! ((negnsTPC <= maxTPC) && (posnsTPC2 <= maxTPC2) && (bpinsTPC <= maxTPC3)) ) {
-            AliDebugClass(2, "Failed check on Cascade PID");
+            AliDebugClass(2, Form("Failed check on Cascade PID: ptrackPID: %f, nTrackPID %f, btrackPID %f",posnsTPC,negnsTPC2,bpinsTPC));
             return kFALSE;
         }
     }
@@ -571,10 +570,7 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     AliDebugClass(1, "Good AOD Cascade");
     AliDebugClass(1, Form("Mass: %d %f %f %d %d %d", fHypothesis, fMass, mass, filtermapP, filtermapN, filtermapB));
     return kTRUE;
-    
 }
-
-
 
 //_________________________________________________________________________________________________
 void AliRsnCutCascade::Print(const Option_t *) const
