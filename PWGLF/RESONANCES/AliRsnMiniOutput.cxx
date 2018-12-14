@@ -514,7 +514,7 @@ Int_t AliRsnMiniOutput::FillPair(AliRsnMiniEvent *event1, AliRsnMiniEvent *event
 // Returns the number of successful fillings.
 // Last argument tells if the reference event for event-based values is the first or the second.
 //
-
+   //printf("Start FillPair\n");
    // check computation type
    Bool_t okComp = kFALSE;
    if (fComputation == kTrackPair)         okComp = kTRUE;
@@ -526,7 +526,7 @@ Int_t AliRsnMiniOutput::FillPair(AliRsnMiniEvent *event1, AliRsnMiniEvent *event
       AliError(Form("[%s] This method can be called only for pair-based computations", GetName()));
       return kFALSE;
    }
-
+   //printf("FillPair 02\n");
    // loop variables
    Int_t i1, i2, start, nadded = 0;
    AliRsnMiniParticle *p1, *p2;
@@ -540,7 +540,10 @@ Int_t AliRsnMiniOutput::FillPair(AliRsnMiniEvent *event1, AliRsnMiniEvent *event
 
    TString selList1  = "";
    TString selList2  = "";
+   printf("Xi cut check\n");
    Int_t   n1 = event1->CountParticles(fSel1, fCharge[0], fCutID[0]);
+   if(n1 > 0) printf("get Xi!\n");
+   printf("Pi cut check\n");
    Int_t   n2 = event2->CountParticles(fSel2, fCharge[1], fCutID[1]);
    for (i1 = 0; i1 < n1; i1++) selList1.Append(Form("%d ", fSel1[i1]));
    for (i2 = 0; i2 < n2; i2++) selList2.Append(Form("%d ", fSel2[i2]));
@@ -550,7 +553,7 @@ Int_t AliRsnMiniOutput::FillPair(AliRsnMiniEvent *event1, AliRsnMiniEvent *event
       AliDebugClass(1, "No pairs to mix");
       return 0;
    }
-
+   
    // external loop
    for (i1 = 0; i1 < n1; i1++) {
       p1 = event1->GetParticle(fSel1[i1]);
@@ -582,7 +585,6 @@ Int_t AliRsnMiniOutput::FillPair(AliRsnMiniEvent *event1, AliRsnMiniEvent *event
          mass2 = p2->StoredMass(kFALSE);
          if(!fUseStoredMass[1] || mass2 < 0.0) mass2 = GetMass(1);
          fPair.Fill(p1, p2, mass1, mass2, fMotherMass);
-	 
          // do rotation if needed
          if (fComputation == kTrackPairRotated1) fPair.InvertP(kTRUE);
          if (fComputation == kTrackPairRotated2) fPair.InvertP(kFALSE);

@@ -943,12 +943,13 @@ void AliRsnMiniAnalysisTask::FillMiniEvent(Char_t evType)
   //  AliRsnMiniParticle miniParticle;
    AliRsnMiniParticle *miniParticlePtr;
    for (ip = 0; ip < npart; ip++) {
+      printf(Form("Particle #%d \n",ip));
       // point cursor to next particle
       fRsnEvent.SetDaughter(cursor, ip);
       miniParticlePtr = fMiniEvent->AddParticle();
       miniParticlePtr->CopyDaughter(&cursor);
       miniParticlePtr->Index() = ip;
-      
+      if(miniParticlePtr->PDGAbs() == 3312) printf(Form("Particle is Xi and charge is #%c \n",miniParticlePtr->Charge()));
       // copy momentum and MC info if present
       // miniParticle.CopyDaughter(&cursor);
       // miniParticle.Index() = ip;
@@ -956,7 +957,11 @@ void AliRsnMiniAnalysisTask::FillMiniEvent(Char_t evType)
       for (ic = 0; ic < ncuts; ic++) {
          AliRsnCutSet *cuts = (AliRsnCutSet *)fTrackCuts[ic];
         //  if (cuts->IsSelected(&cursor)) miniParticle.SetCutBit(ic);
-         if (cuts->IsSelected(&cursor)) miniParticlePtr->SetCutBit(ic);
+          if (cuts->IsSelected(&cursor)){
+              printf(Form("Cut pass! #%d \n",ic));
+              miniParticlePtr->SetCutBit(ic);
+              printf(Form("particle Bits: #%d, charge: %c, PDGabs: %d \n",miniParticlePtr->CutBits(),miniParticlePtr->Charge(),miniParticlePtr->PDGAbs()));
+          }
         }
         // continue;
        

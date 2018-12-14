@@ -139,27 +139,36 @@ Int_t AliRsnMiniEvent::CountParticles(TArrayI &found, Char_t charge, Int_t cutID
 //
 // Counts how many particles have the specified charge and cut bit
 // if charge is not '+', '-' or '0', all charges are considered
-// if cut bit is < 0, it is not checked
+// if cut bit is < 0, it is not checkedƒ
 //
-
+    //printf("CountParticles:: Start\n");
    Int_t i, npart = fParticles.GetEntriesFast();
    Int_t    count = 0;
    AliRsnMiniParticle *part = 0x0;
-
+    //printf(Form("CountParticles: npart = %d\n", npart));
    found.Set(npart);
 
    for (i = 0; i < npart; i++) {
+       //printf(Form("CountParticles: %d loop\n", i));
       part = (AliRsnMiniParticle *)fParticles[i];
+       printf(Form("CountParticles: Check particle: CutID: %d, part: %d \n",cutID,part->CutBits()));
       if (charge == '+' || charge == '-' || charge == '0') {
-         if (part->Charge() != charge) continue;
+          if (part->Charge() != charge){
+              printf(Form("CountParticles: rejected(charge)\n part: %c \n",part->Charge()));
+              continue;
+          }
       }
       if (cutID >= 0) {
-         if (!part->HasCutBit(cutID)) continue;
+          if (!part->HasCutBit(cutID)) {
+              printf(Form("CountParticles: rejected(cut)\n CutID: %d, part: %d \n",cutID,part->CutBits()));
+              continue;
+          }
       }
+      if(cutID==2 || cutID==3) printf(Form("CountParticles: accepted(cut)\n CutID: %d, part: %d \n",cutID,part->CutBits()));
       found[count] = i;
       count++;
    }
-
+   //printf(Form("Finished CountParticles: count = %d\n", count));
    found.Set(count);
    return count;
 }

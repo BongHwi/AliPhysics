@@ -190,9 +190,9 @@ Bool_t AliRsnCutCascade::CheckESD(AliESDcascade *Xi)
     // It is declared static, not to recreate it every time.
     //
     
-    AliDebugClass(1, "Check ESD");
+    AliDebugClass(2, "Check ESD");
     if (Xi->GetOnFlyStatus()) {
-        AliDebugClass(1, "Rejecting Xi/V0 in 'on fly' status");
+        AliDebugClass(2, "Rejecting Xi/V0 in 'on fly' status");
         return kFALSE; // if kTRUE, then this V0 is recontructed
     }
     
@@ -426,8 +426,8 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     AliDebugClass(2, Form("Primary vertex: %f %f %f", xPrimaryVertex, yPrimaryVertex, zPrimaryVertex));
     
     // retrieve the V0 daughters
-    AliAODTrack *pTrack = (AliAODTrack *) (Xi->GetDaughter(0));
-    AliAODTrack *nTrack = (AliAODTrack *) (Xi->GetDaughter(1));
+    AliAODTrack *pTrack = (AliAODTrack *) (Xi->GetSecondaryVtx()->GetDaughter(0));
+    AliAODTrack *nTrack = (AliAODTrack *) (Xi->GetSecondaryVtx()->GetDaughter(1));
     AliAODTrack *bTrack = (AliAODTrack *) (Xi->GetDecayVertexXi()->GetDaughter(0));
     
     // check quality cuts
@@ -458,19 +458,24 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
         return kFALSE;
     }
     AliDebugClass(2, Form("Mass: %d %f %f", fHypothesis, fMass, mass));
-    
+    return kTRUE;
     // topological checks
+    if (TMath::Abs(Xi->DcaV0Daughters()) > fV0MaxDaughtersDCA) {
+        AliDebugClass(2, "Failed check on V0 DCA between daughters");
+        return kFALSE;
+    }
+    if (TMath::Abs(Xi->DcaXiDaughters()) > fCascadeMaxDaughtersDCA) {
+        AliDebugClass(2, "Failed check on Cascade DCA between daughters");
+        return kFALSE;
+    }
     if (TMath::Abs(Xi->DcaV0ToPrimVertex()) > fV0MaxDCAVertex || TMath::Abs(Xi->DcaV0ToPrimVertex()) < fV0MinDCAVertex) {
         AliDebugClass(2, Form("Failed check on V0 DCA to primary vertes dca=%f maxdca=%f mindca=%f",TMath::Abs(Xi->DcaV0ToPrimVertex()),fV0MaxDCAVertex,fV0MinDCAVertex));
         return kFALSE;
     }
-    // DCA Xi disabled: meaning less?
-    /*
-     if (TMath::Abs(Xi->GetDecayVertexXi()) > fCascadeMaxDCAVertex) {
-     AliDebugClass(2, Form("Failed check on Cascade DCA to primary vertes dca=%f maxdca=%f",TMath::Abs(Xi->DcaV0ToPrimVertex()),fCascadeMaxDCAVertex));
-     return kFALSE;
-     }
-     */
+    if (TMath::Abs(Xi->DcaXiToPrimVertex()) > fCascadeMaxDCAVertex || TMath::Abs(Xi->DcaXiToPrimVertex()) < fCascadeMinDCAVertex) {
+        AliDebugClass(2, Form("Failed check on Xi DCA to primary vertes dca=%f maxdca=%f mindca=%f",TMath::Abs(Xi->DcaXiToPrimVertex()),fCascadeMaxDCAVertex,fCascadeMinDCAVertex));
+        return kFALSE;
+    }
     
     // next cut is effective (should it be in AODV0?)
     Double_t lPosXi[3];
@@ -486,16 +491,6 @@ Bool_t AliRsnCutCascade::CheckAOD(AliAODcascade *Xi)
     }
     if (TMath::Abs( Xicospointangle )  < fCascadeMinCosPointAngle) {
         AliDebugClass(2, "Failed check on Cacade cosine of pointing angle");
-        return kFALSE;
-    }
-    
-    // next cut is effective (should it be in AODV0?)
-    if (TMath::Abs(Xi->DcaV0Daughters()) > fV0MaxDaughtersDCA) {
-        AliDebugClass(2, "Failed check on V0 DCA between daughters");
-        return kFALSE;
-    }
-    if (TMath::Abs(Xi->DcaXiDaughters()) > fCascadeMaxDaughtersDCA) {
-        AliDebugClass(2, "Failed check on Cascade DCA between daughters");
         return kFALSE;
     }
     
