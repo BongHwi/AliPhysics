@@ -70,6 +70,7 @@ set(SRCS
   AliRsnCutPhiRAA.cxx
   AliRsnCutDaughterD0.cxx
   AliRsnCutV0.cxx 
+  AliRsnCutCascade.cxx 
   AliRsnCutSet.cxx
   AliRsnExpression.cxx
   AliRsnVariableExpression.cxx

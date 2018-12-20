@@ -61,8 +61,20 @@ void AliRsnMiniParticle::CopyDaughter(AliRsnDaughter *daughter)
       fCharge = '+';
    else if (daughter->IsNeg())
       fCharge = '-';
-   else
-      fCharge = '0';
+   else{
+     AliAODcascade *Xiaod = (AliAODcascade *)daughter->Ref2AODcascade();
+     if(Xiaod){  // For ESD Cascade
+       int aodCharge Xiaod->ChargeXi();
+       if (aodCharge > 0)
+         fCharge = '+';
+       else if (aodCharge < 0)
+         fCharge = '-';
+       else
+         fCharge = '0';
+     }
+     else fCharge = '0';
+   }
+      
 
    // rec info
    if (daughter->GetRef()) {
@@ -90,6 +102,7 @@ void AliRsnMiniParticle::CopyDaughter(AliRsnDaughter *daughter)
      // DCA to Primary Vertex for AOD
      AliAODTrack *track = daughter->Ref2AODtrack();
      AliAODv0 *v0 = daughter->Ref2AODv0();
+     AliAODcascade *xi = daughter->Ref2AODcascade();
      AliAODEvent *aodEvent = (AliAODEvent*) event->GetRefAOD();
      if (track && aodEvent) {
        AliVVertex *vertex = (AliVVertex*) aodEvent->GetPrimaryVertex();
@@ -105,6 +118,12 @@ void AliRsnMiniParticle::CopyDaughter(AliRsnDaughter *daughter)
           fIndexDaughters[0] = v0->GetPosID();
           fIndexDaughters[1] = v0->GetNegID();
           // Printf("!!!!!!!! RSN index=%d v0Pos=%d v0Neg=%d", fIndex, fIndexDaughters[0], fIndexDaughters[1]);
+       }
+       if (xi && aodEvent) {
+           fIndexDaughters[0] = xi->GetPosID();
+           fIndexDaughters[1] = xi->GetNegID();
+           fIndexDaughters[2] = xi->GetBachID();
+           // Printf("!!!!!!!! RSN index=%d xiPos=%d xiNeg=%d xiBach=%d", fIndex, fIndexDaughters[0], fIndexDaughters[1], fIndexDaughters[2]);
        }
      // Number of Daughters from MC and Momentum of the Mother
      if (event->GetRefMC()) {
@@ -144,6 +163,7 @@ void AliRsnMiniParticle::CopyDaughter(AliRsnDaughter *daughter)
        //DCA to Primary Vertex for ESD
        AliESDtrack *track = daughter->Ref2ESDtrack();
        AliESDv0 *v0 = daughter->Ref2ESDv0();
+       AliESDcascade *xi = daughter->Ref2ESDcascade();
        AliESDEvent *esdEvent = (AliESDEvent*) event->GetRefESD();
        if (track && esdEvent) {
 	 AliVVertex *vertex = (AliVVertex*) esdEvent->GetPrimaryVertex();
@@ -158,6 +178,11 @@ void AliRsnMiniParticle::CopyDaughter(AliRsnDaughter *daughter)
        if (v0 && esdEvent) {
           fIndexDaughters[0] = v0->GetPindex();
           fIndexDaughters[1] = v0->GetNindex();
+       }
+       if (xi && esdEvent) {
+          fIndexDaughters[0] = xi->GetPindex();
+          fIndexDaughters[1] = xi->GetNindex();
+          fIndexDaughters[2] = xi->GetBindex();
        }
        // Number of Daughters from MC and Momentum of the Mother
        if (event->GetRefMC()) {
