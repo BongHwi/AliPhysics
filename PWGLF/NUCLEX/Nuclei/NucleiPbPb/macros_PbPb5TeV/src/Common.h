@@ -62,7 +62,7 @@ const float  kCentralityBins[kNCentralityBins] = {0.f,5.f,10.f,20.f,30.f,40.f,50
 // for specific bins
 const int    kCentLength = 10;
 const int    kCentBinsArray[kCentLength][2] = {{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,7},{7,8},{8,9},{9,10}};
-const float  kCentPtLimits[kCentLength] = {7,7,7,7,7,7,7,7,7,7};
+const float  kCentPtLimits[kCentLength] = {8,8,8,8,8,8,8,6,5,4};
 const float  kCentLabels[kCentLength][2] = {{0.,5.},{5.,10.},{10.,20.},{20.,30.},{30.,40.},{40.,50.},{50.,60.},{60.,70.},{70.,80.},{80.,90.}};
 //const float  kPtRebin[kCentLength] = {2.6,2.6,2.2,2.2,2.2,2.,0.6,3.4};
 
@@ -82,7 +82,9 @@ const bool   kSmoothSystematics{true};
 const float  kAbsSyst[2] = {0.08,0.1f};
 
 // Plotter
-const int kPtBinLimit[kCentLength] = {28,28,28,28,28,28,28,28,28,28};
+const int kPtBinLimit[kCentLength] = {28,28,28,28,28,28,28,25,24,23};
+const int kCanvasW = 1920;
+const int kCanvasH = 1080;
 
 // Secondaries
 const int knDCAbins = 52;

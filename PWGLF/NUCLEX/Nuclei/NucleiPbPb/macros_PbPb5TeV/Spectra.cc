@@ -196,13 +196,14 @@ void Spectra() {
         float number_of_events = hCentrality->Integral(kCentBinsArray[iC][0],kCentBinsArray[iC][1],1,2);
         spectraTOF->Scale(1. / number_of_events,"width");
         spectraTPC->Scale(1. / number_of_events,"width");
-        spectraTOF->GetXaxis()->SetRange(1,15);
+        spectraTOF->GetXaxis()->SetRangeUser(0,8);
 
         spectraTOF->Write(Form("TOFspectra%i",iC));
         spectraTPC->Write(Form("TPCspectra%i",iC));
       }
       particle_dir->Close();
     }
+    break; // for the test
   }
 
   output_file.cd();

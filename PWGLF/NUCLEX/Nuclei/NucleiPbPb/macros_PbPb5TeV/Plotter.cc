@@ -49,7 +49,7 @@ void Plotter(bool short_mode = true){
         for(int iB=5; iB<=kPtBinLimit[iC]; iB++){
           if(iPad%6 == 0){
             if(fCanvas) delete fCanvas;
-            fCanvas = new TCanvas(Form("Canvas_%d",iPad/6),Form("Canvas_%d",iPad/6),3200,2400);
+            fCanvas = new TCanvas(Form("Canvas_%d",iPad/6),Form("Canvas_%d",iPad/6),kCanvasW,kCanvasH);
             fCanvas->Divide(3,2);
           }
           //if(iPad==0) fCanvas->Print(Form("cent_%d_%c.pdf[",iC,kLetter[iS]));
@@ -71,6 +71,6 @@ void Plotter(bool short_mode = true){
         }
       }
     }
-    break;
+    break; // for the test
   }
 }

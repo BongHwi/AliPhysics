@@ -442,7 +442,7 @@ void Signal() {
       }
     }
     base_dir->Close();
-    break;
+    break; // for the test
   }
   output_file.Close();
 }
