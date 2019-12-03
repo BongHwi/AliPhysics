@@ -23,7 +23,8 @@ const string kBaseInputDir = "../";
 
 const string kDataFilename = kBaseInputDir + "data/PbPb5TeV/treno20191123/LHC18qr.root";
 const string kNormDataFilename = kBaseInputDir + "data/PbPb5TeV/treno20191109/LHC18qr_PIDqa.root";
-const string kMCfilename = kBaseInputDir + "mc/PbPb5TeV/treno20191123/LHC19d2.root";
+//const string kMCfilename = kBaseInputDir + "mc/PbPb5TeV/treno20191123/LHC19d2.root";
+const string kMCfilename = kBaseInputDir + "mc/PbPb5TeV/treno20191123/LHC19d2_secondary.root";
 
 const string kFilterListNames = "mpuccio_deuterons_";
 const string kNormalisationList = "mpuccio_deuterons_";
@@ -62,12 +63,12 @@ const float  kCentralityBins[kNCentralityBins] = {0.f,5.f,10.f,20.f,30.f,40.f,50
 // for specific bins
 const int    kCentLength = 10;
 const int    kCentBinsArray[kCentLength][2] = {{0,1},{1,2},{2,3},{3,4},{4,5},{5,6},{6,7},{7,8},{8,9},{9,10}};
-const float  kCentPtLimits[kCentLength] = {8,8,8,8,8,8,8,6,5,4};
+const float  kCentPtLimits[kCentLength] = {8,8,8,8,8,8,6,6,5,4};
 const float  kCentLabels[kCentLength][2] = {{0.,5.},{5.,10.},{10.,20.},{20.,30.},{30.,40.},{40.,50.},{50.,60.},{60.,70.},{70.,80.},{80.,90.}};
 //const float  kPtRebin[kCentLength] = {2.6,2.6,2.2,2.2,2.2,2.,0.6,3.4};
 
 // Fit setup
-const float  kFitminPt = -2.0f;
+const float  kFitminPt = -1.8f;
 const float  kFitmaxPt = 3.0f;
 const float  kFitmaxNBkg = 1.0e+9f;
 
