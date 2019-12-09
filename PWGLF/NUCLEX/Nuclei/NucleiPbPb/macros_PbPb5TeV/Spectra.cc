@@ -193,10 +193,11 @@ void Spectra() {
         if (primary_fraction_tpc&&!iS) spectraTPC->Multiply(primary_fraction_tpc);
         //spectraTOF->Scale(0.7448 / n_norm,"width");
         //spectraTPC->Scale(0.7448 / n_norm,"width");
-        float number_of_events = hCentrality->Integral(kCentBinsArray[iC][0],kCentBinsArray[iC][1],1,2);
+        float number_of_events = hCentrality->Integral(kCentBinsArray[iC][0],kCentBinsArray[iC][1],0,1);
         spectraTOF->Scale(1. / number_of_events,"width");
         spectraTPC->Scale(1. / number_of_events,"width");
         spectraTOF->GetXaxis()->SetRangeUser(0,8);
+        std::cout << "Entry: " << number_of_events << std::endl;
 
         spectraTOF->Write(Form("TOFspectra%i",iC));
         spectraTPC->Write(Form("TPCspectra%i",iC));
