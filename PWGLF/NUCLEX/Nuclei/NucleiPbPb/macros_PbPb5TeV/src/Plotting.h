@@ -18,7 +18,10 @@ namespace plotting {
     kViolet+2,
     kBlack
   };
-
+  vector<int> MaterialColors = {kOrange + 10, kOrange - 3, kOrange,
+                              kTeal + 2,    kCyan + 2,    kAzure + 7,  kAzure - 1,
+                              kViolet - 1,  kPink + 8, kBlack};
+                              
   const std::array<int,11> kSpectraColors{
     TColor::GetColor("#ff3300"),
     TColor::GetColor("#ec6e0a"),

@@ -21,9 +21,10 @@ void Secondaries() {
   TFile output_file(kSecondariesOutput.data(),"recreate");
 
   /// Building the function used to fit the primary fraction distribution
-  TF1 fitModel("fitFrac","1/(1-[0]*exp([1]*x))",0.4,6.);
+  TF1 fitModel("fitFrac","1/(1-[0]*exp([1]*x))",0.3,8.);
   fitModel.SetParLimits(0, -100000, 0);
   fitModel.SetParLimits(1, -30, 30);
+  // TF1 fitModel("fitFrac","[0]*TMath::Erf((x-[1])/[2])",0.3,8.);
 
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(1111);
@@ -82,12 +83,12 @@ void Secondaries() {
       obj.Add(pr);
       obj.Add(sc);
       for(int iC=0; iC<kCentLength; iC++){
-        TFractionFitter fitter(dt[iC],&obj,"Q");
+        TFractionFitter fitter(dt[iC],&obj,"QE");
         fitter.Constrain(0, 0., 1.);
         fitter.Constrain(1, 0., 1.);
         Double_t yieldSec = 0., yieldPri = 1., errorPri = 0., errorSec = 0.;
         char input = 'n';
-        TVirtualFitter::SetMaxIterations(10000);
+        TVirtualFitter::SetMaxIterations(1e8);
         Int_t result = fitter.Fit();
         if (result == 0) {
           TH1F* hp = (TH1F*)fitter.GetMCPrediction(0);
@@ -148,10 +149,12 @@ void Secondaries() {
     }
     resdir->cd();
     for(int iC=0; iC<kCentLength; iC++){
+      if(iC > 8)
+        fitModel.SetRange(0.8,8.0);
       hResTFF[iC]->Fit(&fitModel);
       hResTFF[iC]->Write();
     }
     root->Write();
-    break; // for the test
+    // break; // for the test
   }
 }

@@ -35,18 +35,17 @@ void Plotter(bool short_mode = true){
     TTList* list = (TTList*)file_in.Get(list_key->GetName());
     TDirectory* base_dir = file_out.mkdir(list_key->GetName());
     file_out.cd(list_key->GetName());
-    std::cout << string(list_key->GetName()).data() << std::endl;
+    gSystem->Exec(Form("mkdir -p ../results/images/%s/",list_key->GetName()));
     for(int iS=0; iS<2; iS++){
-      std::cout << "   " << kNames[iS] << std::endl;
       TDirectory* dir = base_dir->mkdir(kNames[iS].data());
       dir->cd();
       for(int iC=0; iC<kCentLength; iC++){
-        std::cout << "      " << iC << std::endl;
         dir->mkdir(Form("cent_%d",iC));
         dir->cd(Form("cent_%d",iC));
         iPad = 0;
         nPads = kPtBinLimit[iC] - 5 + 1;
         for(int iB=5; iB<=kPtBinLimit[iC]; iB++){
+          std::cout << "iPad: " << iPad << ", iB: " << iB << std::endl;
           if(iPad%6 == 0){
             if(fCanvas) delete fCanvas;
             fCanvas = new TCanvas(Form("Canvas_%d",iPad/6),Form("Canvas_%d",iPad/6),kCanvasW,kCanvasH);
@@ -55,22 +54,22 @@ void Plotter(bool short_mode = true){
           //if(iPad==0) fCanvas->Print(Form("cent_%d_%c.pdf[",iC,kLetter[iS]));
           fCanvas->cd(iPad%6+1);
           string path = string(list_key->GetName()) + "/" + kNames[iS] + "/TailTail/C_" + to_string(iC) ;
-          std::cout << "path " << path.data() << std::endl;
           RooPlot* fPlot = (RooPlot*)file_in.Get(Form("%s/d%i_%i",path.data(),iC,iB));
+          // std::cout << "path " << Form("%s/d%i_%i",path.data(),iC,iB) << std::endl;
           Requires(fPlot,"RooPlot");
           fPlot->Draw();
-          if((iPad+1)%6 == 0){
-            //fCanvas->Print(Form("cent_%d_%c.pdf",iC,kLetter[iS]));
-            fCanvas->Write();
-          }
           iPad++;
           if(iPad==nPads){
-            //fCanvas->Print(Form("cent_%d_%c.pdf]",iC,kLetter[iS]));
+            fCanvas->Print(Form("../results/images/%s/cent_%d_%c_%d.pdf",list_key->GetName(),iC,kLetter[iS],iB/6));
+            fCanvas->Write();
+          }
+          else if((iPad)%6 == 0){
+            fCanvas->Print(Form("../results/images/%s/cent_%d_%c_%d.pdf",list_key->GetName(),iC,kLetter[iS],iB/6));
             fCanvas->Write();
           }
         }
       }
     }
-    break; // for the test
+    if (kTest) break; // for the test
   }
 }

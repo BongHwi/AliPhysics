@@ -142,6 +142,6 @@ void SecondariesTPC() {
       hResTFF[iC]->Write();
     }
     root->Write();
-    break; // for the test
+    if (kTest) break; // for the test
   }
 }

@@ -124,7 +124,7 @@ void Efficiency(bool MBonly = false) {
         tof->Write(Form("Ratio2MBtof%c%i",kLetter[iS],iBx));
       }
     }
-    break; // for the test
+    if (kTest) break; // for the test
   }
   output_file.Close();
 }

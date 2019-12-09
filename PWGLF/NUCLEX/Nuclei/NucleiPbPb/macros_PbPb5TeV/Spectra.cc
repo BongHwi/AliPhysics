@@ -104,7 +104,9 @@ void Spectra() {
   
 
   for (auto list_key : *signal_file.GetListOfKeys()) {
+    std::cout << "check: " << list_key->GetName() << endl;
     if (string(list_key->GetName()).find(kFilterListNames.data()) == string::npos) continue;
+    std::cout << "Loaded: " << list_key->GetName() << endl;
     /// Getting the correct directories
     TDirectory* base_dir = output_file.mkdir(list_key->GetName());
     output_file.cd(list_key->GetName());
@@ -193,18 +195,23 @@ void Spectra() {
         if (primary_fraction_tpc&&!iS) spectraTPC->Multiply(primary_fraction_tpc);
         //spectraTOF->Scale(0.7448 / n_norm,"width");
         //spectraTPC->Scale(0.7448 / n_norm,"width");
-        float number_of_events = hCentrality->Integral(kCentBinsArray[iC][0],kCentBinsArray[iC][1],0,1);
+        std::cout << "cent bin from: " << hCentrality->GetXaxis()->FindBin(kCentLabels[iC][0]) << " - " <<  hCentrality->GetXaxis()->FindBin(kCentLabels[iC][1])-1 << std::endl;
+        float number_of_events = hCentrality->Integral(
+          hCentrality->GetXaxis()->FindBin(kCentLabels[iC][0]),
+          hCentrality->GetXaxis()->FindBin(kCentLabels[iC][1])-1,
+          4,
+          4);
+        std::cout << "Cent bin: " << iC <<  "number_of_events: " << number_of_events << std::endl;
         spectraTOF->Scale(1. / number_of_events,"width");
         spectraTPC->Scale(1. / number_of_events,"width");
         spectraTOF->GetXaxis()->SetRangeUser(0,8);
-        std::cout << "Entry: " << number_of_events << std::endl;
-
+        particle_dir->cd();
         spectraTOF->Write(Form("TOFspectra%i",iC));
         spectraTPC->Write(Form("TPCspectra%i",iC));
       }
       particle_dir->Close();
     }
-    break; // for the test
+    if (kTest) break; // for the test
   }
 
   output_file.cd();

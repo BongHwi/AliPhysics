@@ -37,8 +37,14 @@ using std::vector;
 #include <RooRealVar.h>
 
 using namespace RooFit;
-
-void Signal() {
+bool use_extended=true;
+void Signal(int chosenDir = 0) {
+  // chosenDir:
+  //    - 0  : default, run all directory at once.
+  //    - 1~ : run only specific folder, starting from 1
+  // 
+  // Usage: cat scripts/parallel.txt | xargs -P6 -L 1 scripts/extract_signal.sh
+  //        And, hadd ../results/signal.root ../results/signal_*.root
 
   /// Suppressing the output
   RooMsgService::instance().setGlobalKillBelow(RooFit::ERROR);
@@ -47,14 +53,18 @@ void Signal() {
 
   /// Taking all the histograms from the MC file
   TFile input_file(kDataFilename.data());
-  TFile output_file(kSignalOutput.data(),"recreate");
-
+  TFile* output_file;
+  if(chosenDir == 0)
+    output_file = (TFile*) new TFile(kSignalOutput.data(),"recreate");
+  else
+    output_file = (TFile*) new TFile(Form("%s_%d.root",kSignalOutputPart.data(),chosenDir),"recreate");
+  
   /// Setting up the fitting environment for TOF analysis
-  RooRealVar m("dm2","m^{2} - m^{2}_{d}",kFitminPt,kFitmaxPt,"GeV^{2}/#it{c}^{4}");
+  RooRealVar m("dm2","m^{2} - m^{2}_{d}",kFitminSignal,kFitmaxSignal,"GeV^{2}/#it{c}^{4}");
   m.setBins(1000,"cache");
-  m.setRange("Full", kFitminPt,kFitmaxPt);
+  m.setRange("Full", kFitminSignal,kFitmaxSignal);
 
-  FitExpExpTailGaus fExpExpTailGaus(&m);
+  FitExpExpTailGaus fExpExpTailGaus(&m,use_extended);
   fExpExpTailGaus.mMu->setRange(0.00001,0.5);
   fExpExpTailGaus.mMu->setVal(0.1);
   fExpExpTailGaus.mMu->setUnit("GeV^{2}/#it{c}^{4}");
@@ -69,16 +79,16 @@ void Signal() {
   fExpExpTailGaus.mTau1->setUnit("GeV^{-2}#it{c}^{4}");
 
   //Background
-  RooRealVar m_bis("dm2_bis","m^{2} - m^{2}_{d}",kFitminPt,kFitmaxPt,"GeV^{2}/#it{c}^{4}");
+  RooRealVar m_bis("dm2_bis","m^{2} - m^{2}_{d}",kFitminSignal,kFitmaxSignal,"GeV^{2}/#it{c}^{4}");
   m_bis.setBins(1000,"cache");
-  m_bis.setRange("Full", kFitminPt,kFitmaxPt);
-  FitExpExpTailGaus fBkg(&m_bis);
+  m_bis.setRange("Full", kFitminSignal,kFitmaxSignal);
+  FitExpExpTailGaus fBkg(&m_bis,use_extended);
   fBkg.UseSignal(false);
   fBkg.mTau0->setUnit("GeV^{-2}#it{c}^{4}");
   fBkg.mTau1->setUnit("GeV^{-2}#it{c}^{4}");
 
   // Low pTbins
-  FitExpPolDSCrystalBall fExpPolDSCrystalBall(&m);
+  FitExpPolDSCrystalBall fExpPolDSCrystalBall(&m,use_extended);
   fExpPolDSCrystalBall.mMu->setRange(0.00001,0.5);
   fExpPolDSCrystalBall.mMu->setVal(0.1);
   fExpPolDSCrystalBall.mMu->setUnit("GeV^{2}/#it{c}^{4}");
@@ -97,7 +107,7 @@ void Signal() {
   ns.setRange("Special", -3., 3.);
 
   // TPC analysis
-  FitGausGaus fGausGaus(&ns);
+  FitGausGaus fGausGaus(&ns,use_extended);
   fGausGaus.mSigma->setRange(0.2,0.9);
   fGausGaus.mSigma->setVal(0.75);
   fGausGaus.mSigma->setUnit("a. u.");
@@ -108,14 +118,18 @@ void Signal() {
   fGausGaus.mMuBkg->setUnit("a. u.");
   fGausGaus.mSigmaBkg->setRange(0.2,4.);
   fGausGaus.mSigmaBkg->setUnit("a. u.");
-
+  int nDir = 0;
   for (auto list_key : *input_file.GetListOfKeys()) {
     /// Preliminary operation to read the list and create an output dir
     if (string(list_key->GetName()).find(kFilterListNames.data()) == string::npos) continue;
+    nDir++;
+    if( chosenDir > 0) { // For multi-core run
+      if (nDir != chosenDir) continue;
+    }
 
     TTList* list = (TTList*)input_file.Get(list_key->GetName());
-    TDirectory* base_dir = output_file.mkdir(list_key->GetName());
-    output_file.cd(list_key->GetName());
+    TDirectory* base_dir = output_file->mkdir(list_key->GetName());
+    output_file->cd(list_key->GetName());
 
     /// Taking all the necessary histogram to perform the analysis
     TH3F *fATOFsignal = (TH3F*)list->Get("fATOFsignal");
@@ -232,7 +246,7 @@ void Signal() {
 
           /// TailTail
           base_dir->cd(Form("%s/TailTail/C_%d",kNames[iS].data(),iC));
-          if(iB<=8){
+          if(iB<=10){
             fExpExpTailGaus.UseBackground(true);
             fExpExpTailGaus.mMu->setRange(-0.5,1.5);
             fExpExpTailGaus.mSigma->setRange(0.05,0.3);
@@ -263,13 +277,14 @@ void Signal() {
               fBkg.mKbkg->setConstant(false);
               fBkg.mTau0->setConstant(false);
             }
-          }
+          } 
           // if(iS==1){
           //   fExpExpTailGaus.mSigma->setVal(sigma_deut[iC]);
           //   fExpExpTailGaus.mSigma->setConstant(true);
           // }
-          if(iB<=8){
-              RooPlot* expPolDSCrystalBall = fExpPolDSCrystalBall.FitData(dat, iName, iTitle, "Full", "Full",false,kFitminPt,kFitmaxPt);
+          if(iB<=10){
+              // RooPlot* expPolDSCrystalBall = fExpPolDSCrystalBall.FitData(dat, iName, iTitle, "Full", "Full",false,kFitminSignal,kFitmaxSignal);
+              RooPlot* expPolDSCrystalBall = fExpPolDSCrystalBall.FitData(dat, iName, iTitle, "Full", "Full");
             fExpPolDSCrystalBall.mSigma->setConstant(false);
             if(iS==0) sigma_deut[iC] = fExpPolDSCrystalBall.mSigma->getVal();
             if(pt_axis->GetBinCenter(iB+1) > kTOFminPt) expPolDSCrystalBall->Write();
@@ -279,7 +294,8 @@ void Signal() {
             hRawCounts[iS][iC]->SetBinError(iB + 1, fExpPolDSCrystalBall.mSigCounts->getError());
           }
           else{
-            RooPlot* expExpTailTailGausPlot = fExpExpTailGaus.FitData(dat, iName, iTitle, "Full", "Full",false,kFitminPt,kFitmaxPt);
+            // RooPlot* expExpTailTailGausPlot = fExpExpTailGaus.FitData(dat, iName, iTitle, "Full", "Full",false,kFitminSignal,kFitmaxSignal);
+            RooPlot* expExpTailTailGausPlot = fExpExpTailGaus.FitData(dat, iName, iTitle, "Full", "Full");
             fExpExpTailGaus.mSigma->setConstant(false);
             if(iS==0) sigma_deut[iC] = fExpExpTailGaus.mSigma->getVal();
             if(pt_axis->GetBinCenter(iB+1) > kTOFminPt) expExpTailTailGausPlot->Write();
@@ -299,8 +315,8 @@ void Signal() {
             float right_edge_float = dat->GetBinLowEdge(right_edge_bin+1);
             fBkg.mX->setRange("signal",left_edge_float,right_edge_float);
             if (iSigma==0) {
-              fBkg.mX->setRange("left",kFitminPt,left_edge_float);
-              fBkg.mX->setRange("right",right_edge_float,kFitmaxPt);
+              fBkg.mX->setRange("left",kFitminSignal,left_edge_float);
+              fBkg.mX->setRange("right",right_edge_float,kFitmaxSignal);
               RooPlot* bkgPlot = fBkg.FitData(dat, Form("%s_sideband",iName.Data()), iTitle, "left,right","Full");
               base_dir->cd(Form("%s/Sidebands/C_%d",kNames[iS].data(),iC));
               bkgPlot->Write();
@@ -442,7 +458,7 @@ void Signal() {
       }
     }
     base_dir->Close();
-    break; // for the test
+    if (kTest) break; // for the test
   }
-  output_file.Close();
+  output_file->Close();
 }
