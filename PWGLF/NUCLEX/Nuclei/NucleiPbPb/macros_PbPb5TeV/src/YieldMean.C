@@ -63,7 +63,7 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   int fitres;
   int trials = 0;
   do {
-    fitres = htot->Fit(f, opt);
+    fitres = htot->Fit(f, opt, "", 1.2, 8);
     Printf("Trial: %d", trials++);
     if(trials > 10) {
       Printf("FIT DOES NOT CONVERGE IN LINE %d",__LINE__);
@@ -72,10 +72,10 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   }
   while (fitres != 0);
   hout->SetBinContent(kFitRes,fitres);
-  //TFile* filewithfits=TFile::Open(logfilename.Data(),"UPDATE");
-  //htot->Write();
-  //filewithfits->Close();
-  //delete filewithfits;
+  TFile* filewithfits=TFile::Open(logfilename.Data(),"UPDATE");
+  htot->Write();
+  filewithfits->Close();
+  delete filewithfits;
 
   cout<<" Fit sys+stat for " <<f->GetName()<<endl;
   cout<<"NDF="<<f->GetNDF()<<" Chi^2="<<f->GetChisquare()<<" Chi^2/NDF="<<f->GetChisquare()/f->GetNDF()<<endl;
@@ -100,7 +100,7 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   /* fit with stat error */
   trials = 0;
   do {
-    fitres = hstat->Fit(f, opt);
+    fitres = hstat->Fit(f, opt, "", 1.2, 8);
     Printf("Trial: %d", trials++);
     if(trials > 10) {
       Printf("FIT DOES NOT CONVERGE IN LINE %d",__LINE__);
@@ -184,7 +184,7 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   TH1 *hhigh = YieldMean_ReturnExtremeHighHisto(hsys);
   trials = 0;
   do {
-    fitres = hhigh->Fit(f, opt);
+    fitres = hhigh->Fit(f, opt, "", 1.2, 8);
     Printf("Trial: %d", trials++);
     if(trials > 10) {
       Printf("FIT DOES NOT CONVERGE IN LINE %d",__LINE__);
@@ -212,7 +212,7 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   TH1 *hhard = YieldMean_ReturnExtremeHardHisto(hsys);
   trials = 0;
   do {
-    fitres = hhard->Fit(f, opt);
+    fitres = hhard->Fit(f, opt, "", 1.2, 8);
     Printf("Trial: %d", trials++);
     if(trials > 10) {
       Printf("FIT DOES NOT CONVERGE IN LINE %d",__LINE__);
@@ -240,7 +240,7 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   TH1 *hlow = YieldMean_ReturnExtremeLowHisto(hsys);
   trials = 0;
   do {
-    fitres = hlow->Fit(f, opt);
+    fitres = hlow->Fit(f, opt, "", 1.2, 8);
     Printf("Trial: %d", trials++);
     if(trials > 10) {
       Printf("FIT DOES NOT CONVERGE IN LINE %d",__LINE__);
@@ -268,7 +268,7 @@ YieldMean(TH1 *hstat, TH1 *hsys, TF1 *f = NULL, Double_t min = 0., Double_t max 
   TH1 *hsoft = YieldMean_ReturnExtremeSoftHisto(hsys);
   trials = 0;
   do {
-    fitres = hsoft->Fit(f, opt);
+    fitres = hsoft->Fit(f, opt, "", 1.2, 8);
     Printf("Trial: %d", trials++);
     if(trials > 10) {
       Printf("FIT DOES NOT CONVERGE IN LINE %d",__LINE__);

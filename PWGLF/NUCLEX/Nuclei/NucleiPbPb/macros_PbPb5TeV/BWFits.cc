@@ -30,7 +30,8 @@ static TF1 *fBGBlastWave_Integrand_den = NULL;
 
 constexpr double kParticleMass = 1.87561;
 constexpr int kNfitFunctions = 4;
-const string kFitFunctionNames[kNfitFunctions] = {"LevyTsallis", "Boltzmann", "Mt-exp", "Pt-exp"};
+// const string kFitFunctionNames[kNfitFunctions] = {"LevyTsallis", "Boltzmann", "Mt-exp", "Pt-exp", "BGBW"};
+std::vector<const string> kFitFunctionNames = {"LevyTsallis", "Boltzmann", "Mt-exp", "Pt-exp", "BGBW"};
 
 //Levy-Tsallis
 enum e_param_tsallis {e_mass, e_n, e_C, e_norm, e_chi2};
@@ -66,12 +67,18 @@ void BWFits(bool antimatter_analysys = false) {
 
   AliPWGFunc pwgfunc;
   pwgfunc.SetVarType(AliPWGFunc::kdNdpt);
-  TF1* fit_functions[kNfitFunctions] = {
-    LevyTsallis(kFitFunctionNames[0].data(), kParticleMass),
-    pwgfunc.GetBoltzmann(kParticleMass, 0.1, 1, kFitFunctionNames[1].data()),
-    pwgfunc.GetMTExp(kParticleMass, 0.1, 1, kFitFunctionNames[2].data()),
-    pwgfunc.GetPTExp(0.1, 1, kFitFunctionNames[3].data()),
-  };
+  std::vector<TF1*> fit_functions;
+  // TF1* fit_functions[kNfitFunctions] = {
+  //   LevyTsallis(kFitFunctionNames[0].data(), kParticleMass),
+  //   pwgfunc.GetBoltzmann(kParticleMass, 0.1, 1, kFitFunctionNames[1].data()),
+  //   pwgfunc.GetMTExp(kParticleMass, 0.1, 1, kFitFunctionNames[2].data()),
+  //   pwgfunc.GetPTExp(0.1, 1, kFitFunctionNames[3].data()),
+  //   pwgfunc.GetBGBW(kParticleMass, 0.6, 0.3, 1, 1e5, kFitFunctionNames[4].data()),
+  // };
+  fit_functions.push_back(LevyTsallis(kFitFunctionNames[0].data(), kParticleMass));
+  fit_functions.push_back(pwgfunc.GetBoltzmann(kParticleMass, 0.1, 1, kFitFunctionNames[1].data()));
+  fit_functions.push_back(pwgfunc.GetMTExp(kParticleMass, 0.1, 1, kFitFunctionNames[2].data()));
+  fit_functions.push_back(pwgfunc.GetPTExp(0.1, 1, kFitFunctionNames[3].data()));
   //levi-tsallis parameters'
   double tsallis_param_val[kCentLength][5];
   double tsallis_param_err[kCentLength][5];
@@ -88,6 +95,10 @@ void BWFits(bool antimatter_analysys = false) {
   double ptexp_param_val[kCentLength][3];
   double ptexp_param_err[kCentLength][3];
   const char* ptexp_param_name[3] = {"$A (GeV^{-1}c$)","$T$ (GeV)","\\chi^2/ndf"};
+  //pt exponential
+  double BGBW_param_val[kCentLength][4];
+  double BGBW_param_err[kCentLength][4];
+  // const char* BGBW_param_name[4] = {"$m$ ($Gev/$c^{2}$)","$T$ (GeV)","\\chi^2/ndf"};
   //
   TFile bwfile(Form("%s/%sfits.root",kBaseOutputDir.data(),kind_of_particle),"recreate");
   TDirectory* datadir = bwfile.mkdir("data");
@@ -133,7 +144,7 @@ void BWFits(bool antimatter_analysys = false) {
         fit_functions[iF]->SetParLimits(3, normMin, normMax);
       }
       // TF1* fit_functions[iF];
-      TH1* h = YieldMean((TH1*)m,(TH1*)sm,fit_functions[iF],1,10.,0.01,0.1,"0q",Form("%s/%slog.root",kBaseOutputDir.data(),kind_of_particle));//,Form("%s/%d", kFitFunctionNames[iF].data(),iC)
+      TH1* h = YieldMean((TH1*)m,(TH1*)sm,fit_functions[iF],1.2,10.,0.01,0.1,"0q",Form("%s/%slog.root",kBaseOutputDir.data(),kind_of_particle));//,Form("%s/%d", kFitFunctionNames[iF].data(),iC)
       // TH1* h = YieldMeanNew(m,sm,sm_corr,sm_uncorr,fit_functions[iF],fit_functions[iF],0,10.,0.01,0.1,true,Form("%s/%slog.root",kBaseOutputDir.data(),kind_of_particle),Form("%s/%d", kFitFunctionNames[iF].data(),iC));
       cout << "\n*****************************" << endl;
       printf("Function: %s\n", kFitFunctionNames[iF].data());
@@ -170,13 +181,19 @@ void BWFits(bool antimatter_analysys = false) {
         mtexp_param_val[iC][2] = fit_functions[iF]->GetChisquare()/fit_functions[iF]->GetNDF();
         mtexp_param_err[iC][2] = 0;
       }
-      else{
+      else if(iF==3){
         for(int iParam=0; iParam<2; iParam++){
           ptexp_param_val[iC][iParam] = fit_functions[iF]->GetParameter(iParam);
           ptexp_param_err[iC][iParam] = fit_functions[iF]->GetParError(iParam);
         }
         ptexp_param_val[iC][2] = fit_functions[iF]->GetChisquare()/fit_functions[iF]->GetNDF();
         ptexp_param_err[iC][2] = 0;
+      }
+      else{
+        for(int iParam=0; iParam<4; iParam++){
+          BGBW_param_val[iC][iParam] = fit_functions[iF]->GetParameter(iParam);
+          BGBW_param_err[iC][iParam] = fit_functions[iF]->GetParError(iParam);
+        }
       }
       h->Write(Form("result%d",iC));
     }

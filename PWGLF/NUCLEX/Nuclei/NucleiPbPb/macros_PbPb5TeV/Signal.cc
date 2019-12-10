@@ -254,8 +254,8 @@ void Signal(int chosenDir = 0) {
 
             fExpPolDSCrystalBall.UseBackground(true);
             fExpPolDSCrystalBall.mMu->setRange(-0.5,1.5);
-            fExpPolDSCrystalBall.mSigma->setRange(0.05,0.3);
-            fExpPolDSCrystalBall.mSigma->setVal(0.1);
+            fExpPolDSCrystalBall.mSigma->setRange(0.1,0.4);
+            fExpPolDSCrystalBall.mSigma->setVal(0.2);
           }
           else{
             fExpExpTailGaus.UseBackground(true);
@@ -282,7 +282,7 @@ void Signal(int chosenDir = 0) {
           //   fExpExpTailGaus.mSigma->setVal(sigma_deut[iC]);
           //   fExpExpTailGaus.mSigma->setConstant(true);
           // }
-          if(iB<=10){
+          if(iB<=0){
               // RooPlot* expPolDSCrystalBall = fExpPolDSCrystalBall.FitData(dat, iName, iTitle, "Full", "Full",false,kFitminSignal,kFitmaxSignal);
               RooPlot* expPolDSCrystalBall = fExpPolDSCrystalBall.FitData(dat, iName, iTitle, "Full", "Full");
             fExpPolDSCrystalBall.mSigma->setConstant(false);

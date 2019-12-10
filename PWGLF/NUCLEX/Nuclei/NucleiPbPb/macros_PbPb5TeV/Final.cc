@@ -186,7 +186,7 @@ void Final(const char* fitFunctionName = "Boltzmann") {
         if (!bw) continue;
         scaledbw = new TH1F(Form("scaledbw%i",iC),"",1000,0.5,1.05*kCentPtLimits[iC]);
         scaledbw->Add(bw);
-        scaledbw->Scale(kScaleFactor[iC]);
+        // scaledbw->Scale(kScaleFactor[iC]);
         scaledbw->SetLineStyle(kDashed);
         scaledbw->SetLineColor(kBlack);
         spectra.cd();

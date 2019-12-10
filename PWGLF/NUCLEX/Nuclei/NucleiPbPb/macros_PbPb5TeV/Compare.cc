@@ -42,6 +42,12 @@ void Compare(TFile* oldreult = new TFile("../final.root","read")){
         stat_ratio[iC]->Write(Form("%sdeuterons_stat_ratio_%d",kind_of_particle,iC));
         syst_ratio[iC]->Write(Form("%sdeuterons_syst_ratio_%d",kind_of_particle,iC));
     }
+
+    TLatex* t = new TLatex();
+        t->SetNDC();
+        t->SetTextSize(0.035);
+
+
     TDirectory* r_dir = output_file.mkdir("ratio");
     TCanvas* fCanvas = new TCanvas("Canvas","Canvas",kCanvasW,kCanvasH);
     fCanvas->Divide(5,2);
@@ -67,6 +73,15 @@ void Compare(TFile* oldreult = new TFile("../final.root","read")){
         TLine *line = new TLine(0.5 * kPtRange[0],1,1.05 * kPtRange[1],1);
         line->SetLineColor(kBlack);
         line->Draw();
+        TF1* pol0fit = new TF1("basicline", "[0]", 0, 8);
+        syst_ratio[iC]->Fit(pol0fit,"","",1.5,8);
+        // std::cout << pol0fit->GetParameter(0) << std::endl;
+        auto diff = abs(1-pol0fit->GetParameter(0))*1e2;
+        std::cout << diff << std::endl;
+
+        t->DrawLatex(0.15, 0.8, Form("#bf{Difference: %.1f}",diff));
+
+
         ratio.Write(Form("%sdeuterons_ratio_%d",kind_of_particle,iC));
 
         fCanvas->cd(iC+1);
