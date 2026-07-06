@@ -2281,7 +2281,7 @@ void AliAnalysisTaskGammaConvV1::UserCreateOutputObjects(){
 
           const Int_t nConvTopoExtBins[10] = {nBinsPtFine, 32, 36, 160, 200, nBinsMinDaughterPt, 120, 100, 100, 100};
           const Double_t convTopoExtXMin[10] = {arrPtBinningFine[0], -0.8, 0., 0., -500., 0., 0., 0., 0., 0.};
-          const Double_t convTopoExtXMax[10] = {arrPtBinningFine[nBinsPtFine], 0.8, TMath::TwoPi(), 200., 500., arrMinDaughterPtBinning[nBinsMinDaughterPt], 6., 1., 1., 0.5};
+          const Double_t convTopoExtXMax[10] = {arrPtBinningFine[nBinsPtFine], 0.8, TMath::TwoPi(), 200., 500., arrMinDaughterPtBinning[nBinsMinDaughterPt], 6., 1., 10., 0.5};
           fSparseMCConvGammaPtEtaPhiRZDaughter[iCut] =
             new THnSparseF("MC_ConvGamma_MCPt_MCEta_MCPhi_R_Z_MinDaughterPt_MaxAbsDaughterEta_PtAsym_MinDaughterPtFrac_OpeningAngle",
                            "MC_ConvGamma_MCPt_MCEta_MCPhi_R_Z_MinDaughterPt_MaxAbsDaughterEta_PtAsym_MinDaughterPtFrac_OpeningAngle",
@@ -2296,13 +2296,13 @@ void AliAnalysisTaskGammaConvV1::UserCreateOutputObjects(){
           fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(5)->SetTitle("min p_{T,e^{#pm}}^{MC} (GeV/#it{c})");
           fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(6)->SetTitle("max |#eta_{e^{#pm}}^{MC}|");
           fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(7)->SetTitle("|p_{T,e+}-p_{T,e-}|/(p_{T,e+}+p_{T,e-})");
-          fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(8)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}");
+          fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(8)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}, capped at 10");
           fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(9)->SetTitle("#theta_{ee}^{MC}");
           fMCList[iCut]->Add(fSparseMCConvGammaPtEtaPhiRZDaughter[iCut]);
 
           const Int_t nConvTopoCompactBins[5] = {nBinsPtFine, 160, nBinsMinDaughterPt, 100, 100};
           const Double_t convTopoCompactXMin[5] = {arrPtBinningFine[0], 0., 0., 0., 0.};
-          const Double_t convTopoCompactXMax[5] = {arrPtBinningFine[nBinsPtFine], 200., arrMinDaughterPtBinning[nBinsMinDaughterPt], 1., 1.};
+          const Double_t convTopoCompactXMax[5] = {arrPtBinningFine[nBinsPtFine], 200., arrMinDaughterPtBinning[nBinsMinDaughterPt], 1., 10.};
           fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut] =
             new THnSparseF("MC_ConvGamma_MCPt_R_MinDaughterPt_PtAsym_MinDaughterPtFrac",
                            "MC_ConvGamma_MCPt_R_MinDaughterPt_PtAsym_MinDaughterPtFrac",
@@ -2313,7 +2313,7 @@ void AliAnalysisTaskGammaConvV1::UserCreateOutputObjects(){
           fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(2)->Set(nBinsMinDaughterPt, arrMinDaughterPtBinning);
           fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(2)->SetTitle("min p_{T,e^{#pm}}^{MC} (GeV/#it{c})");
           fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(3)->SetTitle("|p_{T,e+}-p_{T,e-}|/(p_{T,e+}+p_{T,e-})");
-          fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(4)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}");
+          fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(4)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}, capped at 10");
           fMCList[iCut]->Add(fSparseMCConvGammaPtRMinDaughterPtAsymFrac[iCut]);
         }
       }
@@ -2721,7 +2721,7 @@ void AliAnalysisTaskGammaConvV1::UserCreateOutputObjects(){
 
           const Int_t nTrueConvTopoExtBins[10] = {nBinsPtFine, 32, 36, 160, 200, nBinsMinDaughterPt, 120, 100, 100, 100};
           const Double_t trueConvTopoExtXMin[10] = {arrPtBinningFine[0], -0.8, 0., 0., -500., 0., 0., 0., 0., 0.};
-          const Double_t trueConvTopoExtXMax[10] = {arrPtBinningFine[nBinsPtFine], 0.8, TMath::TwoPi(), 200., 500., arrMinDaughterPtBinning[nBinsMinDaughterPt], 6., 1., 1., 0.5};
+          const Double_t trueConvTopoExtXMax[10] = {arrPtBinningFine[nBinsPtFine], 0.8, TMath::TwoPi(), 200., 500., arrMinDaughterPtBinning[nBinsMinDaughterPt], 6., 1., 10., 0.5};
           fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut] =
             new THnSparseF("ESD_TruePrimaryConvGamma_MCPt_MCEta_MCPhi_R_Z_MinDaughterPt_MaxAbsDaughterEta_PtAsym_MinDaughterPtFrac_OpeningAngle",
                            "ESD_TruePrimaryConvGamma_MCPt_MCEta_MCPhi_R_Z_MinDaughterPt_MaxAbsDaughterEta_PtAsym_MinDaughterPtFrac_OpeningAngle",
@@ -2736,13 +2736,13 @@ void AliAnalysisTaskGammaConvV1::UserCreateOutputObjects(){
           fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(5)->SetTitle("min p_{T,e^{#pm}}^{MC} (GeV/#it{c})");
           fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(6)->SetTitle("max |#eta_{e^{#pm}}^{MC}|");
           fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(7)->SetTitle("|p_{T,e+}-p_{T,e-}|/(p_{T,e+}+p_{T,e-})");
-          fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(8)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}");
+          fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(8)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}, capped at 10");
           fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]->GetAxis(9)->SetTitle("#theta_{ee}^{MC}");
           fTrueList[iCut]->Add(fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter[iCut]);
 
           const Int_t nTrueConvTopoCompactBins[5] = {nBinsPtFine, 160, nBinsMinDaughterPt, 100, 100};
           const Double_t trueConvTopoCompactXMin[5] = {arrPtBinningFine[0], 0., 0., 0., 0.};
-          const Double_t trueConvTopoCompactXMax[5] = {arrPtBinningFine[nBinsPtFine], 200., arrMinDaughterPtBinning[nBinsMinDaughterPt], 1., 1.};
+          const Double_t trueConvTopoCompactXMax[5] = {arrPtBinningFine[nBinsPtFine], 200., arrMinDaughterPtBinning[nBinsMinDaughterPt], 1., 10.};
           fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut] =
             new THnSparseF("ESD_TruePrimaryConvGamma_MCPt_R_MinDaughterPt_PtAsym_MinDaughterPtFrac",
                            "ESD_TruePrimaryConvGamma_MCPt_R_MinDaughterPt_PtAsym_MinDaughterPtFrac",
@@ -2753,7 +2753,7 @@ void AliAnalysisTaskGammaConvV1::UserCreateOutputObjects(){
           fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(2)->Set(nBinsMinDaughterPt, arrMinDaughterPtBinning);
           fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(2)->SetTitle("min p_{T,e^{#pm}}^{MC} (GeV/#it{c})");
           fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(3)->SetTitle("|p_{T,e+}-p_{T,e-}|/(p_{T,e+}+p_{T,e-})");
-          fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(4)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}");
+          fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut]->GetAxis(4)->SetTitle("min p_{T,e^{#pm}}^{MC}/p_{T,#gamma}^{MC}, capped at 10");
           fTrueList[iCut]->Add(fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac[iCut]);
 
           const Int_t nTrueConvStageTopoBins[4] = {nBinsPtFine, 6, 160, nBinsMinDaughterPt};
@@ -3881,7 +3881,7 @@ void AliAnalysisTaskGammaConvV1::ProcessTruePhotonCandidatesAOD(AliAODConversion
 	        }
 	        const Double_t daughterPtSumTrue = posDaughter->Pt() + negDaughter->Pt();
 	        const Double_t daughterPtAsymTrue = daughterPtSumTrue > 0. ? TMath::Abs(posDaughter->Pt() - negDaughter->Pt()) / daughterPtSumTrue : 0.;
-	        const Double_t minDaughterPtFracTrue = Photon->Pt() > 0. ? minDaughterPtTrue / Photon->Pt() : 0.;
+		        const Double_t minDaughterPtFracTrue = Photon->Pt() > 0. ? TMath::Min(minDaughterPtTrue / Photon->Pt(), 9.999) : 0.;
 	        const TVector3 posDaughterMomTrue(posDaughter->Px(), posDaughter->Py(), posDaughter->Pz());
 	        const TVector3 negDaughterMomTrue(negDaughter->Px(), negDaughter->Py(), negDaughter->Pz());
 	        const Double_t openingAngleTrue = (posDaughterMomTrue.Mag() > 0. && negDaughterMomTrue.Mag() > 0.) ? posDaughterMomTrue.Angle(negDaughterMomTrue) : 0.;
@@ -4350,7 +4350,7 @@ void AliAnalysisTaskGammaConvV1::ProcessAODMCParticles(int isCurrentEventSelecte
               const Double_t minDaughterPtProcess5 = TMath::Min(ePosProcess5->Pt(), eNegProcess5->Pt());
               const Double_t daughterPtSumProcess5 = ePosProcess5->Pt() + eNegProcess5->Pt();
               const Double_t daughterPtAsymProcess5 = daughterPtSumProcess5 > 0. ? TMath::Abs(ePosProcess5->Pt() - eNegProcess5->Pt()) / daughterPtSumProcess5 : 0.;
-              const Double_t minDaughterPtFracProcess5 = particle->Pt() > 0. ? minDaughterPtProcess5 / particle->Pt() : 0.;
+	              const Double_t minDaughterPtFracProcess5 = particle->Pt() > 0. ? TMath::Min(minDaughterPtProcess5 / particle->Pt(), 9.999) : 0.;
               const TVector3 ePosProcess5Mom(ePosProcess5->Px(), ePosProcess5->Py(), ePosProcess5->Pz());
               const TVector3 eNegProcess5Mom(eNegProcess5->Px(), eNegProcess5->Py(), eNegProcess5->Pz());
               const Double_t openingAngleProcess5 = (ePosProcess5Mom.Mag() > 0. && eNegProcess5Mom.Mag() > 0.) ? ePosProcess5Mom.Angle(eNegProcess5Mom) : 0.;
