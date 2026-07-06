@@ -5518,7 +5518,7 @@ void AddTask_GammaConvV1_PbPb(
   Int_t nContainer = 2;
   for(Int_t i = 0; i<numberOfCuts; i++){
     
-    if(enableQAPhotonTask>1){
+    if(enableQAPhotonTask == 2 || enableQAPhotonTask == 5){
       if (initializedMatBudWeigths_existing) {
 	mgr->ConnectOutput(task,nContainer,mgr->CreateContainer(Form("%s_%s_%s MBW Photon DCA tree",(cuts.GetEventCut(i)).Data(),(cuts.GetPhotonCut(i)).Data(),(cuts.GetMesonCut(i)).Data()), TTree::Class(), AliAnalysisManager::kOutputContainer, Form("GCo_%i.root",trainConfig)) );
       }else{
