@@ -15,6 +15,7 @@
 #include "TProfile2D.h"
 #include "TH3.h"
 #include "TH3F.h"
+#include "THnSparse.h"
 #include "TMVA/Tools.h"
 #include "TMVA/Reader.h"
 #include <vector>
@@ -219,6 +220,10 @@ class AliAnalysisTaskGammaConvV1 : public AliAnalysisTaskSE {
     TH2F**                            fHistoMCAllGammaSingleProcess5ConvRAllPt;        //!
     TH2F**                            fHistoMCAllGammaSingleProcess5ConvZAllPt;        //!
     TH2F**                            fHistoMCAllGammaSingleProcess5SignPt;            //!
+    THnSparseF**                      fSparseMCAllGammaPtEtaPhiEventZMother;           //!
+    THnSparseF**                      fSparseMCConvGammaPtEtaPhiEventZRMother;         //!
+    THnSparseF**                      fSparseMCConvGammaPtEtaPhiRZDaughter;            //!
+    THnSparseF**                      fSparseMCConvGammaPtRMinDaughterPtAsymFrac;      //!
     TH1F**                            fHistoMCConvGammaR;                              //!
     TH2F**                            fHistoMCConvGammaPtR;                            //!
     TH1F**                            fHistoMCConvGammaEta;                            //!
@@ -296,6 +301,10 @@ class AliAnalysisTaskGammaConvV1 : public AliAnalysisTaskSE {
     TH1F**                            fHistoTrueConvGammaInvMass;                   //!
     TH1F**                            fHistoTrueConvGammaInvMassReco;               //!
     TH2F**                            fHistoTrueConvGammaRecoStageMCPt;             //!
+    THnSparseF**                      fSparseTruePrimaryConvGammaPtEtaPhiEventZRMother; //!
+    THnSparseF**                      fSparseTruePrimaryConvGammaPtEtaPhiRZDaughter; //!
+    THnSparseF**                      fSparseTruePrimaryConvGammaPtRMinDaughterPtAsymFrac; //!
+    THnSparseF**                      fSparseTrueConvGammaRecoStagePtRMinDaughterPt; //!
     TH2F**                            fHistoCombinatorialPt;                        //!
     TH3F**                            fHistoCombinatorialMothersPt;                 //!
     TH2F**                            fHistoCombinatorialPtDeltaPhi_ek;             //!
