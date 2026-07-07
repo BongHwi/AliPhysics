@@ -4419,6 +4419,13 @@ void AddTask_GammaConvV1_PbPb(
         cuts.AddCutPCM("10130023", "0d200009ab770c00amd0404000", "0152101500000000"); // 0-10%
         cuts.AddCutPCM("13530023", "0d200009ab770c00amd0404000", "0152101500000000"); // 30-50%
 
+    // MB single cent
+    } else if (trainConfig == 4098){ //____________________-___
+        cuts.AddCutPCM("10130053", "0d200009ab770c00amd0404000", "0152101500000000"); // 0-10%
+    } else if (trainConfig == 4099){ //____________________-___
+        cuts.AddCutPCM("13530053", "0d200009ab770c00amd0404000", "0152101500000000"); // 30-50%
+
+
     // second complete block
     } else if (trainConfig == 4193){ //____________________-___
         cuts.AddCutPCM("10130e03", "0d200009ab770c00amd0404000", "0152101500000000"); // 0-10%
