@@ -4396,6 +4396,124 @@ void AddTask_GammaConvV1_PbPb(
     } else if (trainConfig == 3509){
       cuts.AddCutPCM("13530023", "0d200008100000001100400000", "0152101500000000"); // 30–50% BACKUP
     
+    ///////////////////
+    // ML SYSTEMATICS 
+    // for LHC18qr_pass3 
+    // This uses a cut on Radius, qT and alpha_AP and rejects double counting 
+    // (which is 936 in 2018 cent classes and event cuts)
+    ///////////////////
+
+                // DATA //
+
+    } else if (trainConfig == 3210){ //____________________-___
+        cuts.AddCutPCM("10130e03", "0dq00008100000002100404000", "0152101500000000"); // 0-10% Data
+    } else if (trainConfig == 3211){ //____________________-___
+        cuts.AddCutPCM("10130e03", "0dq00008100000002100404000", "0152101500000000"); // 0-10% FIXED BDT
+    } else if (trainConfig == 3212){ //____________________-___
+        cuts.AddCutPCM("10130e03", "0dq00008100000002100404000", "0152101500000000"); // 0-10% DELTA PLUS
+    } else if (trainConfig == 3213){ //____________________-___
+        cuts.AddCutPCM("10130e03", "0dq00008100000001100400000", "0152101500000000"); // 0-10% DELTA MINUS
+    } else if (trainConfig == 3214){ //____________________-___
+        cuts.AddCutPCM("10130e03", "0d200008100000001100404000", "0152101500000000"); // 0-10% BACKUP & TEST
+
+    // DATA     SEMI CENTRAL CASE
+    } else if (trainConfig == 3215){ //____________________-___
+        cuts.AddCutPCM("13530e03", "0dq00008100000002100404000", "0152101500000000"); // 30-50% Data
+    } else if (trainConfig == 3216){ //____________________-___
+        cuts.AddCutPCM("13530e03", "0dq00008100000002100404000", "0152101500000000"); // 30-50% FIXED BDT
+    } else if (trainConfig == 3217){ //____________________-___
+        cuts.AddCutPCM("13530e03", "0dq00008100000002100404000", "0152101500000000"); // 30-50% DELTA PLUS
+    } else if (trainConfig == 3218){ //____________________-___
+        cuts.AddCutPCM("13530e03", "0dq00008100000001100400000", "0152101500000000"); // 30-50% DELTA MINUS
+    } else if (trainConfig == 3219){ //____________________-___
+        cuts.AddCutPCM("13530e03", "0d200008100000001100404000", "0152101500000000"); // 30-50% BACKUP & TEST
+
+
+
+     // ==========================
+    // MB - Minimum Bias (33xx)
+    // ==========================
+
+    // MB - CENTRAL (0–10%)
+    } else if (trainConfig == 3310){
+      cuts.AddCutPCM("10130053", "0dq00008100000002100404000", "0152101500000000"); // 0–10% DATA
+    } else if (trainConfig == 3311){
+      cuts.AddCutPCM("10130053", "0dq00008100000002100404000", "0152101500000000"); // 0–10% FIXED BDT
+    } else if (trainConfig == 3312){
+      cuts.AddCutPCM("10130053", "0dq00008100000002100404000", "0152101500000000"); // 0–10% DELTA PLUS
+    } else if (trainConfig == 3313){
+      cuts.AddCutPCM("10130053", "0dq00008100000001100400000", "0152101500000000"); // 0–10% DELTA MINUS
+    } else if (trainConfig == 3314){
+      cuts.AddCutPCM("10130053", "0d200008100000001100404000", "0152101500000000"); // 0–10% BACKUP
+
+    // MB - SEMI CENTRAL (30–50%)
+    } else if (trainConfig == 3315){
+      cuts.AddCutPCM("13530053", "0dq00008100000002100404000", "0152101500000000"); // 30–50% DATA
+    } else if (trainConfig == 3316){
+      cuts.AddCutPCM("13530053", "0dq00008100000002100404000", "0152101500000000"); // 30–50% FIXED BDT
+    } else if (trainConfig == 3317){
+      cuts.AddCutPCM("13530053", "0dq00008100000002100404000", "0152101500000000"); // 30–50% DELTA PLUS
+    } else if (trainConfig == 3318){
+      cuts.AddCutPCM("13530053", "0dq00008100000001100400000", "0152101500000000"); // 30–50% DELTA MINUS
+    } else if (trainConfig == 3319){
+      cuts.AddCutPCM("13530053", "0d200008100000001100404000", "0152101500000000"); // 30–50% BACKUP
+
+    // ==========================
+    // Pi0 (34xx)
+    // ==========================
+
+    // Pi0 - CENTRAL (0–10%)
+    } else if (trainConfig == 3410){
+      cuts.AddCutPCM("10130023", "0dq00008100000002100404000", "0152101500000000"); // 0–10% DATA
+    } else if (trainConfig == 3411){
+      cuts.AddCutPCM("10130023", "0dq00008100000002100404000", "0152101500000000"); // 0–10% FIXED BDT
+    } else if (trainConfig == 3412){
+      cuts.AddCutPCM("10130023", "0dq00008100000002100404000", "0152101500000000"); // 0–10% DELTA PLUS
+    } else if (trainConfig == 3413){
+      cuts.AddCutPCM("10130023", "0dq00008100000001100400000", "0152101500000000"); // 0–10% DELTA MINUS
+    } else if (trainConfig == 3414){
+      cuts.AddCutPCM("10130023", "0d200008100000001100404000", "0152101500000000"); // 0–10% BACKUP
+
+    // Pi0 - SEMI CENTRAL (30–50%)
+    } else if (trainConfig == 3415){
+      cuts.AddCutPCM("13530023", "0dq00008100000002100404000", "0152101500000000"); // 30–50% DATA
+    } else if (trainConfig == 3416){
+      cuts.AddCutPCM("13530023", "0dq00008100000002100404000", "0152101500000000"); // 30–50% FIXED BDT
+    } else if (trainConfig == 3417){
+      cuts.AddCutPCM("13530023", "0dq00008100000002100404000", "0152101500000000"); // 30–50% DELTA PLUS
+    } else if (trainConfig == 3418){
+      cuts.AddCutPCM("13530023", "0dq00008100000001100400000", "0152101500000000"); // 30–50% DELTA MINUS
+    } else if (trainConfig == 3419){
+      cuts.AddCutPCM("13530023", "0d200008100000001100404000", "0152101500000000"); // 30–50% BACKUP
+
+    // ==========================
+    // Eta (35xx)
+    // ==========================
+
+    // Eta - CENTRAL (0–10%)
+    } else if (trainConfig == 3510){
+      cuts.AddCutPCM("10130023", "0dq00008100000002100404000", "0152101500000000"); // 0–10% DATA
+    } else if (trainConfig == 3511){
+      cuts.AddCutPCM("10130023", "0dq00008100000002100404000", "0152101500000000"); // 0–10% FIXED BDT
+    } else if (trainConfig == 3512){
+      cuts.AddCutPCM("10130023", "0dq00008100000002100404000", "0152101500000000"); // 0–10% DELTA PLUS
+    } else if (trainConfig == 3513){
+      cuts.AddCutPCM("10130023", "0dq00008100000001100400000", "0152101500000000"); // 0–10% DELTA MINUS
+    } else if (trainConfig == 3514){
+      cuts.AddCutPCM("10130023", "0d200008100000001100404000", "0152101500000000"); // 0–10% BACKUP
+
+    // Eta - SEMI CENTRAL (30–50%)
+    } else if (trainConfig == 3515){
+      cuts.AddCutPCM("13530023", "0dq00008100000002100404000", "0152101500000000"); // 30–50% DATA
+    } else if (trainConfig == 3516){
+      cuts.AddCutPCM("13530023", "0dq00008100000002100404000", "0152101500000000"); // 30–50% FIXED BDT
+    } else if (trainConfig == 3517){
+      cuts.AddCutPCM("13530023", "0dq00008100000002100404000", "0152101500000000"); // 30–50% DELTA PLUS
+    } else if (trainConfig == 3518){
+      cuts.AddCutPCM("13530023", "0dq00008100000001100400000", "0152101500000000"); // 30–50% DELTA MINUS
+    } else if (trainConfig == 3519){
+      cuts.AddCutPCM("13530023", "0d200008100000001100404000", "0152101500000000"); // 30–50% BACKUP
+
 
     //  LHC18qr_pass3 std. gamma cut: copy paste from 993(data) + MBMC, AS1, AS2, AS3: 
     //    Two full copies for more testing of pt-weights
